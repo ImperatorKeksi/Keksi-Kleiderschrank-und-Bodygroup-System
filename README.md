@@ -169,12 +169,6 @@ WardrobeConfig.Network.payload_limit = 64 * 1024 -- 64 KB
 * 🔫 Social: [https://guns.lol/imperatorkeksi](https://guns.lol/imperatorkeksi)
 * 🎮 Discord: [https://discord.gg/BTtC6b3XAY](https://discord.gg/BTtC6b3XAY)
 
-### 🧩 Entwicklung & Contribution
-
-* Forke das Repo, erstelle einen Branch und öffne PRs für Bugfixes/Features
-* Bitte halte Änderungen modular (Netzwerk, UI, Entity getrennt)
-* Tests lokal in Singleplayer durchführen bevor auf Server pushed wird
-
 ---
 
 ## 🍪 Die Keks Familie Community
