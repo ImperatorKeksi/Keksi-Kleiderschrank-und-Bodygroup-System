@@ -1,64 +1,62 @@
-Keksi Kleiderschrank - Bodygroup Management System
-https://img.shields.io/badge/Garry's%2520Mod-Add--on-blue
-https://img.shields.io/badge/Version-1.0-green
-https://img.shields.io/badge/License-Custom-yellow
+# 🍪 Keksi Kleiderschrank — Bodygroup Management System for Garry's Mod
 
-📖 Über das Projekt
-Keksi Kleiderschrank ist ein umfangreiches Bodygroup-Management-System für Garry's Mod, entwickelt von Imperator Keksi. Dieses Addon ermöglicht Spielern das einfache Speichern, Verwalten und Anwenden von Bodygroup-Kombinationen durch eine intuitive Benutzeroberfläche.
+![Garry's Mod](https://img.shields.io/badge/Garry's%20Mod-Add--on-blue)
+![Version](https://img.shields.io/badge/Version-1.0-green)
+![License](https://img.shields.io/badge/License-Custom-yellow)
 
-✨ Hauptfeatures
-🎨 Vollständige Bodygroup-Kontrolle - Ändere alle Bodygroups deines Models
+**Keksi Kleiderschrank** ist ein umfangreiches Bodygroup-Management-System für Garry's Mod, entwickelt von **Imperator Keksi**.  
+Dieses Addon ermöglicht Spielern das einfache Speichern, Verwalten und Anwenden von Bodygroup-Kombinationen durch eine intuitive Benutzeroberfläche.
 
-💾 Set-Management - Speichere und verwalte unbegrenzt viele Outfits
 
-🖱️ Interaktive 3D-Vorschau - Sieh deine Änderungen in Echtzeit
+## ✨ Hauptfeatures
 
-🏪 Dresser-Entity - Physikalische Kleiderschrank-Entity für RP-Server
+- 🎨 **Vollständige Bodygroup-Kontrolle** – Ändere alle Bodygroups deines Models  
+- 💾 **Set-Management** – Speichere und verwalte unbegrenzt viele Outfits  
+- 🖱️ **Interaktive 3D-Vorschau** – Sieh deine Änderungen in Echtzeit  
+- 🏪 **Dresser-Entity** – Physikalische Kleiderschrank-Entity für RP-Server  
+- 🎨 **Anpassbares Design** – Vollständig konfigurierbare Farben und Fonts  
+- 🔒 **Sicherheitssystem** – Geschützte Netzwerkkommunikation und Validierung  
 
-🎨 Anpassbares Design - Vollständig konfigurierbare Farben und Fonts
 
-🔒 Sicherheitssystem - Geschützte Netzwerkkommunikation und Validierung
+## 🚀 Installation
 
-🚀 Installation
-Hauptaddon-Ordner in garrysmod/addons/ kopieren
+1. **Hauptaddon-Ordner** in `garrysmod/addons/` kopieren  
+2. **Server neustarten** (falls auf Server-Seite)  
+3. **Fertig!** – Das Addon ist einsatzbereit  
 
-Server neustarten (wenn auf Server-Seite)
 
-Fertig! - Das Addon ist einsatzbereit
 
-🎮 Verwendung
-👤 Als Spieler
-Kleiderschrank öffnen:
+## 🎮 Verwendung
 
-Benutze die Konsole: keksi_kleiderschrank_open
+### 👤 Als Spieler
 
-Oder: wardrobe_open (Legacy Command)
+**Kleiderschrank öffnen:**
+- Konsole: `keksi_kleiderschrank_open`  
+- Legacy Command: `wardrobe_open`  
+- Oder: **Interagiere mit dem Dresser-Entity** (Taste **E**)  
 
-Oder: Interagiere mit dem Dresser-Entity (E drücken)
+**Sets verwalten:**
+- Bodygroups in der mittleren Spalte ändern  
+- Sets in der rechten Spalte speichern und anwenden  
+- 3D-Vorschau in der linken Spalte betrachten  
 
-Sets verwalten:
 
-Bodygroups in der mittleren Spalte ändern
+### 🛠️ Als Server-Besitzer
 
-Sets in der rechten Spalte speichern und anwenden
+**Dresser spawnen:**
+- Entity-Menü → *Keksi Kleiderschrank*  
+- In der Welt platzieren  
 
-3D-Vorschau in der linken Spalte betrachten
+**Konfiguration anpassen:**
+- Datei: `lua/wardrobe/sh_config.lua`  
+- Farben, Limits, Berechtigungen anpassen  
 
-🛠️ Als Server-Besitzer
-Dresser spawnen:
 
-Entity-Menü → "Keksi Kleiderschrank"
+## ⚙️ Konfiguration
 
-In der Welt platzieren
+Die `sh_config.lua` ermöglicht umfangreiche Anpassungen:
 
-Konfiguration anpassen:
-
-Datei: lua/wardrobe/sh_config.lua
-
-Farben, Limits, Berechtigungen anpassen
-
-⚙️ Konfiguration
-Die sh_config.lua ermöglicht umfangreiche Anpassungen:
+```lua
 -- Farbdesign anpassen
 WardrobeConfig.Colors.primary = Color(120, 80, 255, 255)
 
@@ -68,8 +66,10 @@ WardrobeConfig.Save.max_sets = 30
 -- Berechtigungen konfigurieren
 WardrobeConfig.Permissions.allow_all = true
 
+
 🔧 Technische Details
 📊 Netzwerk-System
+
 Throttling: 0.1s zwischen Apply-Requests
 
 Payload-Limit: 64KB pro Request
@@ -77,13 +77,15 @@ Payload-Limit: 64KB pro Request
 Validierung: Server-seitige Bodygroup-Validierung
 
 💾 Datenspeicherung
-Format: JSON in Dateisystem
+
+Format: JSON im Dateisystem
 
 Pfad: DATA/keksi_kleiderschrank/
 
 Pro Spieler: Individuelle Set-Speicherung
 
 🎨 UI-System
+
 Vollbild: Responsive Fullscreen-Interface
 
 3D-Vorschau: Interaktive Model-Darstellung
@@ -92,6 +94,7 @@ Drag & Drop: Kamera-Steuerung per Maus
 
 👨‍💻 Entwickler-Information
 📝 Über den Entwickler
+
 Imperator Keksi
 
 🔫 Social Media: guns.lol/imperatorkeksi
@@ -99,74 +102,73 @@ Imperator Keksi
 🎮 Discord: Keks Familie
 
 🍪 Die Keks Familie Community
-Willkommen in der Keks Familie - einer lebendigen Gaming-Community! Bei uns findest du:
+
+Willkommen in der Keks Familie – einer lebendigen Gaming-Community!
 
 🎮 Was bei uns abgeht:
 
-Gaming-Sessions - Gemeinsam zocken und Spaß haben
+Gaming-Sessions & gemeinsame Spiele
 
-Casino Nights - Spannende Casino-Abende
+Casino Nights & Community-Events
 
-Star Wars RP - Intensive Rollenspiel-Erfahrungen
+Star Wars RP & andere RP-Formate
 
-Stream-Ankündigungen - Verpasse keine Livestreams
-
-Hilfe & Support - Bei Problemen helfen wir gerne
-
-Community-Events - Regelmäßige Events und Aktivitäten
+Stream-Ankündigungen & Support
 
 💫 Unsere Angebote:
 
-Verschiedene Gaming-Bereiche für jeden Geschmack
+Verschiedene Gaming-Bereiche
 
-Aktive Community mit netten Mitgliedern
+Aktive & freundliche Community
 
-Professionelle Organisation und Moderation
+Professionelle Organisation
 
-Regelmäßige Updates und Neuigkeiten
+Regelmäßige Updates & Events
 
 🎯 Für wen sind wir?
 
-Für alle, die gerne in Gesellschaft zocken
+Für alle, die gerne zocken
 
-Für Rollenspiel-Enthusiasten
+Für RP- & Casino-Fans
 
-Für Casino- und Spiele-Fans
+Für alle, die eine coole Community suchen
 
-Für alle, die eine nette Community suchen
-
-Schau vorbei und mach dich selbst ein Bild! Wir freuen uns auf dich! ✨
+➡️ Schau vorbei: Discord beitreten
 
 📜 Lizenzbedingungen
+
 ✅ ERLAUBT:
 
-Weiterentwicklung und Modifikation
+Weiterentwicklung & Modifikation
 
-Testing auf öffentlichen und privaten Servern
+Testing auf öffentlichen & privaten Servern
 
-Private und öffentliche Nutzung
+Private & öffentliche Nutzung
 
-Einbindung in andere Projekte (mit Credit)
+Integration in andere Projekte (mit Credit)
 
 ❌ NICHT ERLAUBT:
 
 Kommerzieller Verkauf oder Vermarktung
 
-Behauptung der eigenen Urheberschaft
+Entfernen von Credits & Entwickler-Hinweisen
 
-Entfernen der Credits und Entwickler-Hinweise
+Falsche Urheberangabe
 
-Nutzung für betrügerische oder schädliche Zwecke
+Nutzung für schädliche Zwecke
 
 📝 Rechtlicher Hinweis:
-Dieses Addon ist geistiges Eigentum von Imperator Keksi. Die vollständigen Lizenzbestimmungen können im Discord eingesehen werden. Bei Fragen zur kommerziellen Nutzung kontaktieren Sie bitte den Entwickler.
+Dieses Addon ist geistiges Eigentum von Imperator Keksi.
+Die vollständigen Lizenzbestimmungen sind im Discord einsehbar.
+Für kommerzielle Nutzung bitte Kontakt aufnehmen.
 
 📞 Support
-Discord: https://discord.gg/BTtC6b3XAY
 
-Fragen: Im Discord-Channel stellen
+💬 Discord: https://discord.gg/BTtC6b3XAY
 
-Updates: Folge auf guns.lol für Neuigkeiten
+❓ Fragen: Im Support-Channel stellen
+
+📰 Updates: Folge auf guns.lol
 
 Made with ❤️ by Imperator Keksi
 "Bringing style to Garry's Mod, one outfit at a time!"
