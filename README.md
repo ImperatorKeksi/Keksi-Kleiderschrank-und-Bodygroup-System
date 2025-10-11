@@ -26,24 +26,6 @@ Server neustarten (wenn auf Server-Seite)
 
 Fertig! - Das Addon ist einsatzbereit
 
-📁 Dateistruktur
-text
-garrysmod/addons/keksi_kleiderschrank/
-├── lua/
-│   ├── autorun/
-│   │   ├── wardrobe_cl.lua      # Client-Seite UI & Networking
-│   │   ├── wardrobe_sv.lua      # Server-Seite Logik & Persistenz
-│   │   └── wardrobe_shared.lua  # Shared Konfiguration
-│   ├── entities/
-│   │   └── wardrobe_dresser/
-│   │       ├── cl_init.lua      # Client Entity
-│   │       ├── init.lua         # Server Entity  
-│   │       └── shared.lua       # Shared Entity
-│   └── wardrobe/
-│       └── sh_config.lua        # Hauptkonfiguration
-└── materials/
-    └── entities/
-        └── wardrobe_dresser.png # Entity Icon (optional)
 🎮 Verwendung
 👤 Als Spieler
 Kleiderschrank öffnen:
@@ -77,8 +59,6 @@ Farben, Limits, Berechtigungen anpassen
 
 ⚙️ Konfiguration
 Die sh_config.lua ermöglicht umfangreiche Anpassungen:
-
-lua
 -- Farbdesign anpassen
 WardrobeConfig.Colors.primary = Color(120, 80, 255, 255)
 
@@ -87,6 +67,7 @@ WardrobeConfig.Save.max_sets = 30
 
 -- Berechtigungen konfigurieren
 WardrobeConfig.Permissions.allow_all = true
+
 🔧 Technische Details
 📊 Netzwerk-System
 Throttling: 0.1s zwischen Apply-Requests
@@ -117,31 +98,44 @@ Imperator Keksi
 
 🎮 Discord: Keks Familie
 
-🍪 Die Keks Familie - Wo das Backen heiß hergeht! 🎉
-Willkommen in der Keks Familie - der süßesten Community auf Discord! Bei uns ist immer Backtag:
+🍪 Die Keks Familie Community
+Willkommen in der Keks Familie - einer lebendigen Gaming-Community! Bei uns findest du:
 
-🍪 Was bei uns abgeht:
+🎮 Was bei uns abgeht:
 
-🎮 Gaming-Sessions - Mit Keks-Pausen natürlich!
+Gaming-Sessions - Gemeinsam zocken und Spaß haben
 
-💻 Development-Help - Wir helfen beim Code-Backen
+Casino Nights - Spannende Casino-Abende
 
-🏗️ Building-Tipps - Wie baue ich die perfekte Keksfabrik?
+Star Wars RP - Intensive Rollenspiel-Erfahrungen
 
-😂 Keks-Witze - "Warum ging der Keks zum Arzt? Er fühlte sich krümelig!"
+Stream-Ankündigungen - Verpasse keine Livestreams
 
-🔥 Ofen-Witze - "Treffen sich zwei Backbleche. Sagt das eine: 'Du siehst aber heiß aus heute!'"
+Hilfe & Support - Bei Problemen helfen wir gerne
 
-🎉 Unsere Spezialitäten:
+Community-Events - Regelmäßige Events und Aktivitäten
 
-Community-Events - Unser Backofen läuft rund um die Uhr!
+💫 Unsere Angebote:
 
-Custom Content - Hier backen wir die besten Addons!
+Verschiedene Gaming-Bereiche für jeden Geschmack
 
-Hilfe & Support - Wenn mal was anbrennt, löschen wir gemeinsam!
+Aktive Community mit netten Mitgliedern
 
-👨‍🍳 Warum zur Keks Familie?
-Weil bei uns jeder willkommen ist - ob Großbäcker oder Back-Anfänger! Wir teilen Rezepte, helfen bei Problemen und haben immer ein offenes Ohr. Also: Komm in die Keksdose, wir haben Plätzchen! 🍪
+Professionelle Organisation und Moderation
+
+Regelmäßige Updates und Neuigkeiten
+
+🎯 Für wen sind wir?
+
+Für alle, die gerne in Gesellschaft zocken
+
+Für Rollenspiel-Enthusiasten
+
+Für Casino- und Spiele-Fans
+
+Für alle, die eine nette Community suchen
+
+Schau vorbei und mach dich selbst ein Bild! Wir freuen uns auf dich! ✨
 
 📜 Lizenzbedingungen
 ✅ ERLAUBT:
@@ -167,20 +161,12 @@ Nutzung für betrügerische oder schädliche Zwecke
 📝 Rechtlicher Hinweis:
 Dieses Addon ist geistiges Eigentum von Imperator Keksi. Die vollständigen Lizenzbestimmungen können im Discord eingesehen werden. Bei Fragen zur kommerziellen Nutzung kontaktieren Sie bitte den Entwickler.
 
-🐛 Bug Reports & Feature Requests
-Bei Problemen oder Verbesserungsvorschlägen bitte auf Discord melden!
-
-🤝 Beitragen
-Du möchtest zum Projekt beitragen?
-Willkommen in der Keks-Familie!
-Tritt unserem Discord bei und werde Teil der Community.
-
 📞 Support
-Discord: https://discord.gg/BTtC6b3XAY - Komm in die Keksdose! 🍪
+Discord: https://discord.gg/BTtC6b3XAY
 
-Fragen: Im Discord-Channel stellen - Wir helfen gerne!
+Fragen: Im Discord-Channel stellen
 
-Updates: Folge mir auf guns.lol für Neuigkeiten
+Updates: Folge auf guns.lol für Neuigkeiten
 
 Made with ❤️ by Imperator Keksi
 "Bringing style to Garry's Mod, one outfit at a time!"
