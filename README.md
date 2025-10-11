@@ -1,7 +1,6 @@
 Hier ist die **komplette** `README.md`-Datei — du kannst den gesamten Inhalt direkt in eine `README.md` kopieren und ins Repo pushen:
 
-```markdown
-# 🍪 Keksi Kleiderschrank — Bodygroup Management System for Garry's Mod
+## 🍪 Keksi Kleiderschrank — Bodygroup Management System for Garry's Mod
 
 ![Garry's Mod](https://img.shields.io/badge/Garry's%20Mod-Add--on-blue)
 ![Version](https://img.shields.io/badge/Version-1.0-green)
