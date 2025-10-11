@@ -62,30 +62,6 @@ Dieses Addon ermöglicht Spielern das einfache Speichern, Verwalten und Anwenden
 
 ---
 
-## 📁 Dateistruktur
-
-```
-
-garrysmod/addons/keksi_kleiderschrank/
-├── lua/
-│   ├── autorun/
-│   │   ├── wardrobe_cl.lua      # Client-Seite UI & Networking
-│   │   ├── wardrobe_sv.lua      # Server-Seite Logik & Persistenz
-│   │   └── wardrobe_shared.lua  # Shared Konfiguration
-│   ├── entities/
-│   │   └── wardrobe_dresser/
-│   │       ├── cl_init.lua      # Client Entity
-│   │       ├── init.lua         # Server Entity
-│   │       └── shared.lua       # Shared Entity
-│   └── wardrobe/
-│       └── sh_config.lua        # Hauptkonfiguration
-└── materials/
-└── entities/
-└── wardrobe_dresser.png # Entity Icon (optional)
-
-````
-
----
 
 ## 🎮 Verwendung
 
@@ -241,27 +217,6 @@ Willkommen in der **Keks Familie** — eine aktive Gaming-Community.
 * **Discord:** [https://discord.gg/BTtC6b3XAY](https://discord.gg/BTtC6b3XAY)
 * **Fragen & Issues:** Öffne ein Issue im GitHub-Repo oder poste im Discord-Support-Channel
 * **Updates & News:** Folge dem Entwickler auf guns.lol
-
----
-
-## 📝 Changelog
-
-**v1.0** — Initiale Veröffentlichung
-
-* Grundlegende Bodygroup-Verwaltung
-* Dresser-Entity
-* 3D-Preview & UI
-* Server-seitige Validierung
-
-(Bitte Changelog für weitere Releases hier ergänzen)
-
----
-
-## 🙌 Credits
-
-* **Author:** Imperator Keksi
-* **Community:** Keks Familie
-* **Icons / Assets:** (sofern Dritte genutzt werden — bitte Credits hier ergänzen)
 
 ---
 
