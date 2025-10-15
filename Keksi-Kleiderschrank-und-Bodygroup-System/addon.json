@@ -1,0 +1,11 @@
+﻿{
+"title": "Keks Kleiderschrank - Bodygroup & Skin System v2.1",
+"type": "ServerContent",
+"tags": [ "roleplay", "wardrobe", "bodygroups", "clothing", "skins" ],
+"ignore": [
+"*.md",
+"*.txt",
+"*.psd",
+"*.git*"
+]
+}

@@ -39,6 +39,10 @@ net.Receive("Wardrobe_SyncSets", function()
     local sets = net.ReadTable() or {}
     currentSets = sets -- Speichere Sets global
     
+    -- Globale Update-Funktionen und Variablen (gleich am Anfang definiert)
+    local allBgButtons = {} -- Speichere alle Buttons für Updates
+    local allCurrentLabels = {} -- Speichere alle aktuell-Labels
+    
     -- Wenn Wardrobe bereits offen ist, aktualisiere nur die Sets
     if IsValid(WardrobeFrame) and globalBuildSets then
         globalBuildSets()
@@ -127,6 +131,50 @@ net.Receive("Wardrobe_SyncSets", function()
     modelPreview:SetCamPos(Vector(80,0,60))
     modelPreview:SetFOV(70)
     
+    -- WICHTIG: Sync mit aktuellen Spieler-Einstellungen beim Öffnen
+    local function syncModelPreviewWithPlayer()
+        local ply = LocalPlayer()
+        if IsValid(modelPreview) and IsValid(modelPreview.Entity) and IsValid(ply) then
+            -- Sync Model
+            modelPreview:SetModel(ply:GetModel())
+            
+            -- Sync alle Bodygroups
+            local bodygroups = ply:GetBodyGroups() or {}
+            for _, bg in ipairs(bodygroups) do
+                local currentValue = ply:GetBodygroup(bg.id)
+                modelPreview.Entity:SetBodygroup(bg.id, currentValue)
+            end
+            
+            -- Sync Skin
+            local currentSkin = ply:GetSkin() or 0
+            modelPreview.Entity:SetSkin(currentSkin)
+        end
+    end
+    
+    -- Update Model Preview (lokale Hilfsfunktion)
+    local function updateModelPreview()
+        if IsValid(modelPreview) then
+            local ply = LocalPlayer()
+            local ent = modelPreview.Entity
+            if IsValid(ent) then
+                -- Update Bodygroups
+                for _, bg in ipairs(ply:GetBodyGroups()) do
+                    local currentValue = ply:GetBodygroup(bg.id)
+                    ent:SetBodygroup(bg.id, currentValue)
+                end
+                
+                -- Update Skin
+                local currentSkin = ply:GetSkin() or 0
+                ent:SetSkin(currentSkin)
+            end
+        end
+    end
+    
+    -- Sync beim ersten Laden
+    timer.Simple(0.1, function()
+        syncModelPreviewWithPlayer()
+    end)
+    
     -- Kamera und Animations-System
     local camDistance = 80
     local camAngle = 0
@@ -212,27 +260,117 @@ net.Receive("Wardrobe_SyncSets", function()
     local bodygroupScroll = vgui.Create("DScrollPanel", middlePanel)
     bodygroupScroll:SetPos(padding, 60)
     bodygroupScroll:SetSize(middleW - padding*4, contentH - 90)
-
-    -- Globale Update-Funktionen - Leere alle alten Referenzen
-    local allBgButtons = {} -- Speichere alle Buttons für Updates
-    local allCurrentLabels = {} -- Speichere alle aktuell-Labels
     
+    -- ====================================================================
+    -- 🎨 SKIN-SEKTION (Diskret ins Original-Design integriert)
+    -- ====================================================================
+    
+    local ply = LocalPlayer()
+    local numSkins = ply:SkinCount() or 0
+    local currentSkin = ply:GetSkin() or 0
+    
+    if numSkins > 1 then -- Nur anzeigen wenn Model mehrere Skins hat
+        local skinPanel = bodygroupScroll:Add("DPanel")
+        local skinButtonCount = numSkins
+        local skinRowsNeeded = math.ceil(skinButtonCount / 3)
+        local skinPanelHeight = 150 + (skinRowsNeeded - 1) * 60
+        skinPanel:SetTall(skinPanelHeight)
+        skinPanel:Dock(TOP)
+        skinPanel:DockMargin(8, 8, 8, 20)
+        skinPanel.Paint = function(s,w,h) 
+            -- Gleicher Stil wie Bodygroups - Lila-Blau Gradient Background
+            draw.RoundedBox(12, 0, 0, w, h, cfg.Colors.dark)
+            draw.RoundedBox(12, 2, 2, w-4, h-4, cfg.Colors.glow)
+            draw.RoundedBox(12, 4, 4, w-8, h-8, Color(cfg.Colors.dark.r + 15, cfg.Colors.dark.g + 15, cfg.Colors.dark.b + 15, 200))
+            -- Subtiler Schatten-Effekt
+            draw.RoundedBox(12, 1, 1, w-2, 2, cfg.Colors.glow)
+        end
+
+        -- Skin Header (im Original-Stil)
+        local skinLbl = vgui.Create("DLabel", skinPanel)
+        skinLbl:SetText("Model Skins")
+        skinLbl:SetFont(cfg.Fonts.header.name)
+        skinLbl:SetTextColor(cfg.Colors.primary) -- Lila-Blau wie Bodygroups
+        skinLbl:SetPos(padding + 12, 25)
+        skinLbl:SizeToContents()
+
+        -- Current Skin Display (im Original-Stil)
+        local currentSkinLbl = vgui.Create("DLabel", skinPanel)
+        currentSkinLbl:SetText("Aktueller Skin: " .. currentSkin .. " / " .. (numSkins - 1))
+        currentSkinLbl:SetFont(cfg.Fonts.normal.name)
+        currentSkinLbl:SetTextColor(cfg.Colors.success)
+        currentSkinLbl:SetPos(padding + 12, 55)
+        currentSkinLbl:SizeToContents()
+        
+        -- Skin-Buttons (Gleicher Stil wie Bodygroup-Buttons)
+        local buttonY = 95
+        local buttonX = padding + 20
+        local buttonsPerRow = 3
+        local buttonWidth = 130
+        local buttonHeight = 45
+        local buttonSpacing = 145
+        
+        for i = 0, numSkins - 1 do
+            local btn = vgui.Create("DButton", skinPanel)
+            btn:SetText("Skin " .. i)
+            btn:SetFont(cfg.Fonts.normal.name)
+            btn:SetPos(buttonX + (i % buttonsPerRow) * buttonSpacing, buttonY + math.floor(i / buttonsPerRow) * 60)
+            btn:SetSize(buttonWidth, buttonHeight)
+            btn:SetTextColor(cfg.Colors.text)
+            
+            local skinValue = i
+            btn.isSelected = (currentSkin == skinValue)
+            
+            btn.Paint = function(s, w, h)
+                if s.isSelected then
+                    -- Ausgewählter Skin - Lila-Blau Primary mit Glow-Effekt (gleich wie Bodygroups)
+                    draw.RoundedBox(6, 0, 0, w, h, cfg.Colors.primary)
+                    draw.RoundedBox(6, 2, 2, w-4, h-4, cfg.Colors.glow)
+                    draw.RoundedBox(6, 4, 4, w-8, h-8, Color(cfg.Colors.primary.r + 30, cfg.Colors.primary.g + 30, cfg.Colors.primary.b + 30, 180))
+                elseif s:IsHovered() then
+                    -- Hover - Secondary Lila-Blau (gleich wie Bodygroups)
+                    draw.RoundedBox(6, 0, 0, w, h, cfg.Colors.secondary)
+                    draw.RoundedBox(6, 2, 2, w-4, h-4, Color(cfg.Colors.secondary.r + 15, cfg.Colors.secondary.g + 15, cfg.Colors.secondary.b + 15, 150))
+                else
+                    -- Normal - Dark Lila-Blau (gleich wie Bodygroups)
+                    draw.RoundedBox(6, 0, 0, w, h, cfg.Colors.dark)
+                    draw.RoundedBox(6, 1, 1, w-2, h-2, Color(cfg.Colors.dark.r + 10, cfg.Colors.dark.g + 10, cfg.Colors.dark.b + 10, 120))
+                end
+            end
+            
+            -- Speichere skinValue als Property für updateAllUI()
+            btn.skinValue = skinValue
+            
+            btn.DoClick = function(self)
+                -- Setze Skin lokal
+                ply:SetSkin(skinValue)
+                
+                -- Update alle Skin-Buttons
+                for j = 0, numSkins - 1 do
+                    local otherBtn = skinPanel:GetChildren()[j + 3] -- +3 wegen Label-Offset
+                    if IsValid(otherBtn) and otherBtn.isSelected ~= nil then
+                        otherBtn.isSelected = (j == skinValue)
+                    end
+                end
+                
+                -- Update Label
+                currentSkinLbl:SetText("Aktueller Skin: " .. skinValue .. " / " .. (numSkins - 1))
+                
+                -- Model Preview vollständig updaten
+                updateModelPreview()
+                syncModelPreviewWithPlayer()
+                
+                -- Send to server für Persistierung
+                net.Start("Wardrobe_ChangeSkin")
+                net.WriteInt(skinValue, 8)
+                net.SendToServer()
+            end
+        end
+    end
+
     -- Initialisiere die Button-Dictionaries für alle Bodygroups
     for _, bg in ipairs(LocalPlayer():GetBodyGroups() or {}) do
         allBgButtons[bg.id] = {}
-    end
-    
-    local function updateModelPreview()
-        if IsValid(modelPreview) then
-            local ply = LocalPlayer()
-            local ent = modelPreview.Entity
-            if IsValid(ent) then
-                for _, bg in ipairs(ply:GetBodyGroups()) do
-                    local currentValue = ply:GetBodygroup(bg.id)
-                    ent:SetBodygroup(bg.id, currentValue)
-                end
-            end
-        end
     end
     
     -- Update nur eine spezifische Bodygroup
@@ -260,6 +398,8 @@ net.Receive("Wardrobe_SyncSets", function()
     -- Update alle UI-Elemente nach kompletter Set-Änderung
     local function updateAllUI()
         local ply = LocalPlayer()
+        
+        -- Update Bodygroup Buttons
         for bgId, buttons in pairs(allBgButtons) do
             local currentValue = ply:GetBodygroup(bgId)
             -- Update alle Buttons für diese Bodygroup
@@ -269,12 +409,33 @@ net.Receive("Wardrobe_SyncSets", function()
                 end
             end
         end
-        -- Update Labels
+        
+        -- Update Bodygroup Labels
         for bgId, label in pairs(allCurrentLabels) do
             if IsValid(label) then
                 label:SetText("Aktuell: Variante " .. (ply:GetBodygroup(bgId) + 1))
             end
         end
+        
+        -- Update Skin Buttons (falls Skin-Panel existiert)
+        if IsValid(skinPanel) then
+            local currentSkin = ply:GetSkin()
+            local children = skinPanel:GetChildren()
+            
+            -- Durchsuche alle Skin-Buttons
+            for _, child in ipairs(children) do
+                if IsValid(child) and child.skinValue ~= nil then -- Skin-Button erkannt
+                    child.isSelected = (child.skinValue == currentSkin)
+                end
+            end
+            
+            -- Update Skin Label
+            if IsValid(currentSkinLbl) then
+                local numSkins = ply:SkinCount() or 1
+                currentSkinLbl:SetText("Aktueller Skin: " .. currentSkin .. " / " .. (numSkins - 1))
+            end
+        end
+        
         updateModelPreview()
     end
 
@@ -474,13 +635,32 @@ net.Receive("Wardrobe_SyncSets", function()
                 net.WriteTable(s) 
                 net.SendToServer()
                 
-                -- Apply locally für sofortige Vorschau
-                for _, bg in ipairs(s.bodygroups or {}) do
-                    LocalPlayer():SetBodygroup(bg.index, bg.value)
-                end
-                updateAllUI() -- Verwende die neue Update-Funktion
+                -- Apply locally für sofortige Vorschau (Bodygroups + Skin!)
+                local ply = LocalPlayer()
                 
-                LocalPlayer():EmitSound("garrysmod/balloon_pop_cute.wav")
+                -- Bodygroups anwenden
+                for _, bg in ipairs(s.bodygroups or {}) do
+                    ply:SetBodygroup(bg.index, bg.value)
+                end
+                
+                -- Skin anwenden (falls im Set vorhanden)
+                if s.skin and s.skin >= 0 then
+                    ply:SetSkin(s.skin)
+                    
+                    -- Auch an Server senden für Persistierung
+                    net.Start("Wardrobe_ChangeSkin")
+                    net.WriteInt(s.skin, 8)
+                    net.SendToServer()
+                end
+                
+                updateAllUI() -- UI komplett aktualisieren
+                syncModelPreviewWithPlayer() -- Model Preview syncen
+                
+                -- Erfolgssound
+                ply:EmitSound("garrysmod/balloon_pop_cute.wav")
+                
+                -- Chat-Nachricht
+                chat.AddText(Color(200,200,200), "[Keksi Kleiderschrank] ", cfg.Colors.primary, 'Set "' .. (s.name or "Unbenannt") .. '" angewendet')
             end
 
             local delBtn = vgui.Create("DButton", pnl)
@@ -645,18 +825,41 @@ net.Receive("Wardrobe_SyncSets", function()
         end
     end
     saveBtn.DoClick = function()
-        -- build current bodygroup table
-        local out = { name = saveName:GetValue(), bodygroups = {} }
-        local bgs2 = LocalPlayer():GetBodyGroups() or {}
+        -- Build complete set mit Bodygroups UND Skins
+        local ply = LocalPlayer()
+        local out = { 
+            name = saveName:GetValue(), 
+            bodygroups = {},
+            skin = ply:GetSkin() or 0  -- WICHTIG: Skin hinzufügen!
+        }
+        
+        -- Sammle alle Bodygroups
+        local bgs2 = ply:GetBodyGroups() or {}
         for _, bg in ipairs(bgs2) do
-            local val = LocalPlayer():GetBodygroup(bg.id) or 0
+            local val = ply:GetBodygroup(bg.id) or 0
             table.insert(out.bodygroups, { name = bg.name, index = bg.id, value = val })
         end
+        
         table.insert(currentSets, out)
-        -- send to server to store
-        net.Start("Wardrobe_SaveSet") net.WriteTable(out) net.SendToServer()
+        
+        -- Send kompletres Set an Server
+        net.Start("Wardrobe_SaveSet") 
+        net.WriteTable(out) 
+        net.SendToServer()
+        
         buildSets()
+        
+        -- Bestätigungsnachricht
+        chat.AddText(Color(200,200,200), "[Keksi Kleiderschrank] ", cfg.Colors.primary, 'Set "' .. out.name .. '" gespeichert (Bodygroups + Skin)')
     end
+    
+    -- Initial sync beim Öffnen des Wardrobes
+    timer.Simple(0.1, function() -- Kurzer Delay damit alle UI-Elemente erstellt sind
+        if IsValid(WardrobeFrame) then
+            updateAllUI()
+            syncModelPreviewWithPlayer()
+        end
+    end)
 
 end)
 

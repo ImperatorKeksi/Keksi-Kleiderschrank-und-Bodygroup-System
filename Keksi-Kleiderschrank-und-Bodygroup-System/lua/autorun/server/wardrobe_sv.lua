@@ -15,6 +15,7 @@ util.AddNetworkString("Wardrobe_SyncSets")
 util.AddNetworkString("Wardrobe_ApplySet")
 util.AddNetworkString("Wardrobe_SaveSet")
 util.AddNetworkString("Wardrobe_Notify")
+util.AddNetworkString("Wardrobe_ChangeSkin") -- Skin-Unterstützung hinzugefügt
 
 local function playerDataPath(ply)
     local id = ply:SteamID64() or tostring(ply:SteamID())
@@ -131,15 +132,30 @@ net.Receive("Wardrobe_SaveSet", function(len, ply)
         end
     end
 
-    -- load existing and append
+    -- Skin-Validierung hinzufügen
+    local skinValue = 0
+    if data.skin and isnumber(data.skin) then
+        local maxSkins = ply:SkinCount() or 1
+        if data.skin >= 0 and data.skin < maxSkins then
+            skinValue = data.skin
+        end
+    end
+
+    -- Load existing and append (mit Skin-Support)
     local sets = loadSets(ply)
-    table.insert(sets, { name = name, bodygroups = safe, time = os.time() })
+    table.insert(sets, { 
+        name = name, 
+        bodygroups = safe, 
+        skin = skinValue,  -- Skin hinzufügen!
+        time = os.time() 
+    })
+    
     if not saveSets(ply, sets) then
         net.Start("Wardrobe_Notify") net.WriteString("Speichern fehlgeschlagen (Größe/Limit)") net.Send(ply)
         return
     end
 
-    net.Start("Wardrobe_Notify") net.WriteString('Du hast dein Set "' .. name .. '" gespeichert') net.Send(ply)
+    net.Start("Wardrobe_Notify") net.WriteString('Du hast dein Set "' .. name .. '" gespeichert (mit Skin)') net.Send(ply)
 end)
 
 -- Apply a set requested by client
@@ -164,7 +180,7 @@ net.Receive("Wardrobe_ApplySet", function(len, ply)
         return
     end
 
-    -- validate then apply
+    -- Validate und apply Bodygroups
     local applied = 0
     for _, bg in ipairs(set.bodygroups or {}) do
         local found, idx, val = validateBodygroupEntry(ply, bg)
@@ -173,13 +189,21 @@ net.Receive("Wardrobe_ApplySet", function(len, ply)
             applied = applied + 1
         end
     end
+    
+    -- Validate und apply Skin (falls vorhanden)
+    if set.skin and isnumber(set.skin) then
+        local maxSkins = ply:SkinCount() or 1
+        if set.skin >= 0 and set.skin < maxSkins then
+            ply:SetSkin(set.skin)
+            applied = applied + 1
+        end
+    end
 
-    -- Nur Chat-Nachricht bei gespeicherten Sets mit Namen
+    -- Chat-Nachricht bei gespeicherten Sets
     local setName = set.name
     if setName and setName ~= "" and string.len(setName) > 0 then
-        -- Gespeichertes Set wurde angewendet
         net.Start("Wardrobe_Notify") 
-        net.WriteString('Du hast dich umgezogen und benutzt jetzt dein Set "' .. setName .. '"') 
+        net.WriteString('Du hast dich umgezogen und benutzt jetzt dein Set "' .. setName .. '" (Bodygroups + Skin)') 
         net.Send(ply)
     end
     -- Stumm bei einzelnen Bodygroup-Änderungen (haben keinen Namen)
@@ -207,6 +231,32 @@ end)
 -- Dresser interaction system - Network strings für Entity
 util.AddNetworkString("Wardrobe_OpenFromDresser")
 
+-- ====================================================================
+-- 🎨 SKIN-HANDLER (Diskret ins Original-System integriert)
+-- ====================================================================
 
+-- Skin-Validierung
+local function isValidSkin(ply, skinId)
+    if not IsValid(ply) then return false end
+    local maxSkins = ply:SkinCount() or 1
+    return skinId >= 0 and skinId < maxSkins
+end
 
-print("[Wardrobe] Server module loaded")
+-- Network Handler: Skin ändern
+net.Receive("Wardrobe_ChangeSkin", function(len, ply)
+    local skinId = net.ReadInt(8)
+    
+    if not isValidSkin(ply, skinId) then
+        ply:ChatPrint("[Wardrobe] Ungültiger Skin für dein Model!")
+        return
+    end
+    
+    ply:SetSkin(skinId)
+    
+    -- Optional: Log für Admins
+    if cfg.Debug and cfg.Debug.log_changes then
+        print(string.format("[Wardrobe] %s hat Skin geändert zu: %d", ply:Nick(), skinId))
+    end
+end)
+
+print("[Wardrobe] Server module loaded mit Skin-Unterstützung")
