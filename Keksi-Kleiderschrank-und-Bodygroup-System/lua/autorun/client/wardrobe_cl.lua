@@ -1,12 +1,39 @@
--- Client-side UI and networking for Keksi Kleiderschrank
+--[[
+    Keksi Kleiderschrank - Client UI und Networking
+    ==============================================
+    
+    Diese Datei enthält die gesamte Client-seitige Logik des Kleiderschrank-Systems:
+    - Vollbild-Benutzeroberfläche mit 3D Model Preview
+    - Bodygroup- und Skin-Kontrollen
+    - Set-Management (Speichern/Laden/Löschen)
+    - Interaktive Kamerasteuerung
+    - Netzwerkkommunikation mit dem Server
+    
+    Features:
+    - Moderne, responsive UI im Vollbild-Format
+    - Drag & Drop Kamerasteuerung in der 3D-Vorschau
+    - Automatische Kamerarotation
+    - Echtzeit-Vorschau aller Änderungen
+    - Set-Verwaltung mit Rename/Delete-Funktionen
+    
+    Entwickelt von: Imperator Keksi
+    https://guns.lol/imperatorkeksi
+--]]
+
+-- Nur auf Client ausführen
 if not CLIENT then return end
 
+-- Konfiguration laden
 include("wardrobe/sh_config.lua")
 local cfg = WardrobeConfig
 
--- Safety fallback für fehlende Konfiguration
+--[[
+    Sicherheits-Fallback für fehlende Konfiguration
+    ===============================================
+    Falls die Konfiguration nicht geladen werden kann, verwende Standard-Werte.
+--]]
 if not cfg or not cfg.Colors then
-    print("[Keksi Kleiderschrank] Config nicht gefunden - verwende Fallback-Farben")
+    print("[Keksi Kleiderschrank] Konfiguration nicht gefunden - verwende Fallback-Farben")
     cfg = cfg or {}
     cfg.Colors = {
         primary = Color(120, 80, 255, 255),
@@ -31,10 +58,19 @@ if not cfg or not cfg.Colors then
     cfg.PrintName = cfg.PrintName or "Keksi Kleiderschrank"
 end
 
--- Globale Variablen für Set-Management
-local currentSets = {}
-local globalBuildSets = nil
+--[[
+    Globale Variablen
+    ================
+--]]
+local currentSets = {}      -- Aktuell geladene Sets des Spielers
+local globalBuildSets = nil -- Globale Referenz zur Set-Aufbau-Funktion
 
+--[[
+    Netzwerk-Empfänger
+    =================
+--]]
+
+-- Server sendet die Sets des Spielers
 net.Receive("Wardrobe_SyncSets", function()
     local sets = net.ReadTable() or {}
     currentSets = sets -- Speichere Sets global

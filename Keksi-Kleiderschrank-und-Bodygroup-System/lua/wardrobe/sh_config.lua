@@ -1,18 +1,39 @@
--- shared configuration for Keksi Kleiderschrank
--- Change values here to customize fonts, colors, limits and behaviour.
+--[[
+    Keksi Kleiderschrank - Shared Configuration
+    ==========================================
+    
+    Diese Datei enthält alle wichtigen Konfigurationseinstellungen für das Keksi Kleiderschrank System.
+    Hier können Farben, Schriftarten, Limits und Verhalten angepasst werden.
+    
+    Diese Datei wird sowohl auf Client als auch auf Server geladen (shared).
+    
+    Entwickelt von: Imperator Keksi
+    https://guns.lol/imperatorkeksi
+--]]
+-- Hauptkonfigurationstabelle erstellen (falls noch nicht vorhanden)
 WardrobeConfig = WardrobeConfig or {}
 
+-- Anzeigename des Addons
 WardrobeConfig.PrintName = "Keksi Kleiderschrank"
 
--- Fonts: created on client side during load using these definitions
+--[[
+    Schriftarten-Definitionen
+    =========================
+    Diese Schriftarten werden client-seitig beim Laden erstellt.
+    Hier können Größe, Gewicht und Basis-Font angepasst werden.
+--]]
 WardrobeConfig.Fonts = {
-    header = {name = "KeksiKleiderschrank.Header", font = "DermaLarge", size = 22, weight = 700},
-    normal = {name = "KeksiKleiderschrank.Normal", font = "DermaDefault", size = 14, weight = 500},
-    small = {name = "KeksiKleiderschrank.Small", font = "DermaDefaultSmall", size = 12, weight = 400}
+    header = {name = "KeksiKleiderschrank.Header", font = "DermaLarge", size = 22, weight = 700},    -- Große Überschrift
+    normal = {name = "KeksiKleiderschrank.Normal", font = "DermaDefault", size = 14, weight = 500}, -- Standard Text
+    small = {name = "KeksiKleiderschrank.Small", font = "DermaDefaultSmall", size = 12, weight = 400} -- Kleiner Text
 }
 
--- UI colors (RGBA) - only create Color objects on client
--- Vollständiges Lila-Blau Farbschema
+--[[
+    Farbschema
+    ==========
+    Vollständiges Lila-Blau Farbschema für das UI.
+    Farbobjekte werden nur client-seitig erstellt, um Server-Performance zu schonen.
+--]]
 WardrobeConfig.Colors = {}
 if CLIENT then
     WardrobeConfig.Colors = {
@@ -72,59 +93,99 @@ if CLIENT then
     }
 end
 
--- UI layout values
+--[[
+    UI Layout Einstellungen
+    =======================
+    Grundlegende Werte für das Benutzeroberflächen-Layout.
+--]]
 WardrobeConfig.UI = {
-    frame_w = 0, -- wird zu ScrW() gesetzt (Fullscreen)
-    frame_h = 0, -- wird zu ScrH() gesetzt (Fullscreen)
-    padding = 12,
-    spacing = 8,
-    border_radius = 0, -- Kein Radius für Fullscreen
-    animation_time = 0.12 -- seconds for simple transitions (purely cosmetic)
+    frame_w = 0,             -- Wird zu ScrW() gesetzt (Vollbild-Breite)
+    frame_h = 0,             -- Wird zu ScrH() gesetzt (Vollbild-Höhe)
+    padding = 12,            -- Innenabstand für UI-Elemente
+    spacing = 8,             -- Abstand zwischen UI-Elementen
+    border_radius = 0,       -- Kein Radius für Vollbild-Design
+    animation_time = 0.12    -- Sekunden für UI-Übergänge (rein kosmetisch)
 }
 
--- Persistence limits and paths
+--[[
+    Datenspeicherung und Limits
+    ===========================
+    Einstellungen für die Persistierung von Spielerdaten.
+--]]
 WardrobeConfig.Save = {
-    folder = "keksi_kleiderschrank", -- DATA/<folder>/
-    max_sets = 30, -- max number of saved sets per player
-    max_set_size_kb = 64 -- limit JSON size per set to prevent abuse
+    folder = "keksi_kleiderschrank", -- Ordner unter DATA/ für Spielerdaten
+    max_sets = 30,                   -- Maximale Anzahl Sets pro Spieler
+    max_set_size_kb = 64            -- Maximale JSON-Größe pro Set (Anti-Missbrauch)
 }
 
--- Security & Networking
+--[[
+    Sicherheit und Netzwerk
+    =======================
+    Einstellungen zum Schutz vor Missbrauch und zur Performance-Optimierung.
+--]]
 WardrobeConfig.Network = {
-    max_payload_kb = 64, -- maximum payload size accepted from clients
-    throttled_seconds = 0.1 -- minimal delay between apply requests per player (reduziert)
+    max_payload_kb = 64,      -- Maximale Paketgröße von Clients (KB)
+    throttled_seconds = 0.1   -- Mindestabstand zwischen Apply-Requests pro Spieler
 }
 
--- Dresser interaction settings
+--[[
+    Dresser Entity Einstellungen
+    ============================
+    Konfiguration für die physischen Kleiderschrank-Objekte.
+--]]
 WardrobeConfig.Dresser = {
-    enabled = true, -- Enable dresser interaction
-    model = "models/props_c17/FurnitureDresser001a.mdl", -- Dresser model to interact with
-    max_distance = 100, -- Maximum interaction distance
-    show_hint = true -- Show interaction hint to players
+    enabled = true,          -- Dresser-Interaktion aktivieren
+    model = "models/props_c17/FurnitureDresser001a.mdl", -- 3D-Model des Kleiderschranks
+    max_distance = 100,                                 -- Maximale Interaktions-Entfernung
+    show_hint = true                                   -- Interaktions-Hinweis anzeigen
 }
 
--- Permissions (can be extended to integrate with third-party rank addons)
+--[[
+    Berechtigungen
+    ==============
+    Kann erweitert werden, um mit Rang-Addons von Dritten zu integrieren.
+--]]
 WardrobeConfig.Permissions = {
-    allow_all = true, -- if false, only ranks in `allowed_ranks` can change certain restricted items
-    allowed_ranks = { "superadmin", "admin" } -- example strings - integrators can adapt to their rank system
+    allow_all = true,                         -- Falls false, können nur Ränge in `allowed_ranks` bestimmte Sachen ändern
+    allowed_ranks = { "superadmin", "admin" } -- Beispiel-Ränge - kann an das jeweilige Rang-System angepasst werden
 }
 
--- Optional restrictions per bodygroup name (by model) -> example structure
--- WardrobeConfig.Restrictions = {
---    ["models/player/kleiner.mdl"] = {
---        ["hat"] = {roles = {"vip", "admin"}, allow = true},
---    }
--- }
+--[[
+    Erweiterte Beschränkungen (Optional)
+    ===================================
+    Hier können spezielle Beschränkungen pro Bodygroup und Model definiert werden.
+    Beispiel-Struktur:
+    WardrobeConfig.Restrictions = {
+       ["models/player/kleiner.mdl"] = {
+           ["hat"] = {roles = {"vip", "admin"}, allow = true},
+       }
+    }
+--]]
 WardrobeConfig.Restrictions = WardrobeConfig.Restrictions or {}
 
+--[[
+    Client-seitige Initialisierung
+    ==============================
+    Erstelle Schriftarten basierend auf der Konfiguration.
+--]]
 if CLIENT then
-    -- create fonts based on config
+    -- Schriftarten basierend auf Konfiguration erstellen
     for k, v in pairs(WardrobeConfig.Fonts) do
-        surface.CreateFont(v.name, { font = v.font, size = v.size, weight = v.weight, antialias = true })
+        surface.CreateFont(v.name, { 
+            font = v.font, 
+            size = v.size, 
+            weight = v.weight, 
+            antialias = true 
+        })
     end
 end
 
--- small utility function to clamp numbers
+--[[
+    Hilfsfunktionen
+    ===============
+--]]
+
+-- Kleine Hilfsfunktion zum Begrenzen von Zahlen
 function WardrobeConfig.ClampInt(v, low, high)
     v = tonumber(v) or 0
     if v < low then v = low end
@@ -132,5 +193,5 @@ function WardrobeConfig.ClampInt(v, low, high)
     return math.floor(v)
 end
 
--- Export the table
+-- Konfigurationstabelle exportieren
 return WardrobeConfig

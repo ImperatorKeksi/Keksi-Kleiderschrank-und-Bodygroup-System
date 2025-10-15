@@ -1,42 +1,69 @@
--- Server-side logic for Keksi Kleiderschrank
--- Handles persistence, validation and secure networking
+--[[
+    Keksi Kleiderschrank - Server Logic
+    ===================================
+    
+    Diese Datei enthält die gesamte Server-seitige Logik des Kleiderschrank-Systems.
+    Sie behandelt:
+    - Datenpersistierung (Speicherung der Spieler-Sets)
+    - Validierung von Bodygroup-Änderungen
+    - Sichere Netzwerkkommunikation
+    - Anti-Spam und Sicherheitsmaßnahmen
+    
+    Entwickelt von: Imperator Keksi
+    https://guns.lol/imperatorkeksi
+--]]
+
+-- Nur auf Server ausführen
 if not SERVER then return end
 
-AddCSLuaFile("wardrobe/sh_config.lua") -- make config available to clients (autorun/shared style)
+-- Konfiguration für Clients verfügbar machen
+AddCSLuaFile("wardrobe/sh_config.lua")
 
--- Load config
+-- Konfiguration laden
 local cfg = include("wardrobe/sh_config.lua") or WardrobeConfig
 if not cfg then
-    error("[Keksi Kleiderschrank] Failed to load configuration file")
+    error("[Keksi Kleiderschrank] Fehler beim Laden der Konfigurationsdatei")
 end
 
-util.AddNetworkString("Wardrobe_RequestSets")
-util.AddNetworkString("Wardrobe_SyncSets")
-util.AddNetworkString("Wardrobe_ApplySet")
-util.AddNetworkString("Wardrobe_SaveSet")
-util.AddNetworkString("Wardrobe_Notify")
-util.AddNetworkString("Wardrobe_ChangeSkin") -- Skin-Unterstützung hinzugefügt
+--[[
+    Netzwerk-Strings registrieren
+    =============================
+    Alle Nachrichten zwischen Client und Server werden hier definiert.
+--]]
+util.AddNetworkString("Wardrobe_RequestSets")  -- Client fragt nach seinen Sets
+util.AddNetworkString("Wardrobe_SyncSets")     -- Server sendet Sets an Client
+util.AddNetworkString("Wardrobe_ApplySet")     -- Client möchte Set anwenden
+util.AddNetworkString("Wardrobe_SaveSet")      -- Client möchte Set speichern
+util.AddNetworkString("Wardrobe_Notify")       -- Server sendet Benachrichtigung an Client
+util.AddNetworkString("Wardrobe_ChangeSkin")   -- Client möchte Skin ändern
 
+--[[
+    Hilfsfunktionen für Datenpfade und Validierung
+    ==============================================
+--]]
+
+-- Erstellt den Dateipfad für Spielerdaten basierend auf SteamID64
 local function playerDataPath(ply)
     local id = ply:SteamID64() or tostring(ply:SteamID())
     return string.format("%s/%s.txt", cfg.Save.folder, id)
 end
 
--- Validate a single bodygroup entry against player's model
+-- Validiert einen einzelnen Bodygroup-Eintrag gegen das Spieler-Model
 local function validateBodygroupEntry(ply, bg)
-    -- bg should be table: {name = "", index = 0, value = 0}
+    -- bg sollte eine Tabelle sein: {name = "", index = 0, value = 0}
     if not istable(bg) then return false end
     local name = tostring(bg.name or "")
     local index = tonumber(bg.index)
     local value = tonumber(bg.value)
     if not name or index == nil or value == nil then return false end
 
+    -- Verfügbare Bodygroups des Spielers abrufen
     local bgs = ply:GetBodyGroups() or {}
     local found = false
     for _, descriptor in ipairs(bgs) do
         if descriptor.name == name and descriptor.id == index then
             found = true
-            -- clamp value to allowed range
+            -- Wert auf erlaubten Bereich begrenzen (Anti-Cheat)
             value = math.Clamp(math.floor(value), 0, descriptor.num - 1)
             break
         end
@@ -44,42 +71,51 @@ local function validateBodygroupEntry(ply, bg)
     return found, index, value
 end
 
--- Load saved sets for a player
+-- Lädt gespeicherte Sets für einen Spieler von der Festplatte
 local function loadSets(ply)
     local path = playerDataPath(ply)
     if not file.Exists(path, "DATA") then return {} end
     local raw = file.Read(path, "DATA")
     if not raw or raw == "" then return {} end
+    -- Sichere JSON-Dekodierung mit Fehlerbehandlung
     local ok, t = pcall(util.JSONToTable, raw)
     if not ok or not istable(t) then return {} end
     return t
 end
 
--- Save sets for a player
+-- Speichert Sets für einen Spieler auf die Festplatte
 local function saveSets(ply, sets)
     if not istable(sets) then return false end
-    -- enforce max sets
+    -- Maximale Anzahl Sets durchsetzen (älteste entfernen falls zu viele)
     while #sets > cfg.Save.max_sets do
         table.remove(sets, 1)
     end
+    -- JSON kodieren und Größe prüfen (Anti-Spam Schutz)
     local raw = util.TableToJSON(sets)
     if string.len(raw) > cfg.Save.max_set_size_kb * 1024 then return false end
+    -- Datei schreiben
     local path = playerDataPath(ply)
     file.CreateDir(cfg.Save.folder)
     file.Write(path, raw)
     return true
 end
 
--- When client requests their sets
+--[[
+    Netzwerk-Empfänger (Network Receivers)
+    ======================================
+    Hier werden alle eingehenden Client-Nachrichten verarbeitet.
+--]]
+
+-- Client fragt nach seinen gespeicherten Sets
 net.Receive("Wardrobe_RequestSets", function(len, ply)
-    -- send back player's saved sets
+    -- Sets vom Spieler laden und zurücksenden
     local sets = loadSets(ply)
     net.Start("Wardrobe_SyncSets")
         net.WriteTable(sets)
     net.Send(ply)
 end)
 
--- Save a set from client
+-- Client möchte ein Set speichern
 net.Receive("Wardrobe_SaveSet", function(len, ply)
     if not IsValid(ply) then return end
     -- security: cap read size

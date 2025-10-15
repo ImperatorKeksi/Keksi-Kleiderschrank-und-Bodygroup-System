@@ -1,9 +1,23 @@
+/*
+    Keksi Kleiderschrank - Entity Material Definition
+    ================================================
+    
+    Diese VMT-Datei definiert das Material für die Dresser-Entity.
+    Sie wird verwendet, um das Aussehen der Kleiderschrank-Entity
+    im Spawn-Menü und in der 3D-Welt zu bestimmen.
+    
+    Shader: UnlitGeneric (einfacher, unbeleuchteter Shader)
+    
+    Entwickelt von: Imperator Keksi
+    https://guns.lol/imperatorkeksi
+*/
+
 "UnlitGeneric"
 {
-	"$basetexture" "entities/wardrobe_dresser"
-	"$nocull" 1
-	"$ignorez" 1
-	"$additive" 0
-	"$vertexcolor" 1
-	"$vertexalpha" 1
+	"$basetexture" "entities/wardrobe_dresser"  // Basis-Textur der Entity
+	"$nocull" 1                                 // Keine Backface-Culling
+	"$ignorez" 1                                // Z-Buffer ignorieren
+	"$additive" 0                               // Kein additives Blending
+	"$vertexcolor" 1                            // Vertex-Farben verwenden
+	"$vertexalpha" 1                            // Vertex-Alpha verwenden
 }
