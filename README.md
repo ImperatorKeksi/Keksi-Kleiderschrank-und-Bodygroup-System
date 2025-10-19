@@ -2,7 +2,7 @@
 
 > **Ein professionelles Bodygroup-Management System für Garry's Mod mit erweiterten Features und moderner UI**
 
-[![Version](https://img.shields.io/badge/Version-2.1-purple)](https://github.com/imperatorkeksi/keksi-kleiderschrank-und-bodygroup-system)
+[![Version](https://img.shields.io/badge/Version-1.0-purple)](https://github.com/imperatorkeksi/keksi-kleiderschrank-und-bodygroup-system)
 [![Garry's Mod](https://img.shields.io/badge/Garry's%20Mod-Compatible-blue)](https://store.steampowered.com/app/4000/Garrys_Mod/)
 [![DarkRP](https://img.shields.io/badge/DarkRP-Integration-orange)](https://github.com/FPtje/DarkRP)
 [![License](https://img.shields.io/badge/License-Free-green)](#lizenz)
@@ -322,7 +322,7 @@ Für **Fragen**, **Feedback** oder **Kollaborationen** kannst du Imperator Keksi
 ### 📋 **Lizenz-Zusammenfassung:**
 
 ```
-Keks Kleiderschrank - Bodygroup & Skin Management System v2.1
+Keks Kleiderschrank - Bodygroup & Skin Management System v1.0
 Copyright (c) 2025 Imperator Keksi
 
 Dieses Add-on ist kostenlose Software für die Garry's Mod Community.
@@ -354,7 +354,7 @@ Wenn dir das **Keks Kleiderschrank - Bodygroup & Skin Management System** gefäl
 
 ---
 
-**Version 2.1** – Erstellt mit **💜 Leidenschaft** für die **Garry's Mod Community**
+**Version 1.0** – Erstellt mit **💜 Leidenschaft** für die **Garry's Mod Community**
 
 *Ein Projekt von **Imperator Keksi** - Für die Gemeinschaft, mit der Gemeinschaft*
 
